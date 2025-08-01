@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// Step 1: Import the necessary components from react-bootstrap
+import { Container, Form, Button, Card } from 'react-bootstrap';
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -6,33 +8,49 @@ function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     onLogin(email, password);
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <form onSubmit={handleSubmit}>
-        <h2>Login to The Gentry Vault</h2>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} 
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }} 
-        />
-        <button type="submit" style={{ width: '100%', padding: '10px' }}>Login</button>
-      </form>
-    </div>
+    
+    <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
+      <div className="w-100" style={{ maxWidth: '400px' }}>
+        {}
+        <Card>
+          <Card.Body>
+            <h2 className="text-center mb-4">Login to The Gentry Vault</h2>
+            {}
+            <Form onSubmit={handleSubmit}>
+              {}
+              <Form.Group id="email" className="mb-3">
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  required 
+                />
+              </Form.Group>
+
+              <Form.Group id="password" className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required 
+                />
+              </Form.Group>
+
+              {}
+              <Button variant="primary" type="submit" className="w-100 mt-3">
+                Login
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      </div>
+    </Container>
   );
 }
 

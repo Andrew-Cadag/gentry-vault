@@ -1,41 +1,59 @@
 import React from 'react';
 
+import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
+
 function WatchCard({ watch, onDelete, onEdit }) {
 
-  // Helper function to determine the color based on the watch's status
-  const getStatusColor = (status) => {
+  
+  const getStatusVariant = (status) => {
     switch (status) {
       case 'Sold':
-        return 'red';
+        return 'danger';
       case 'Reserved':
-        return 'orange';
+        return 'warning';
       case 'Available':
-        return 'green';
+        return 'success';
       default:
-        return 'black';
+        return 'secondary';
     }
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '15px', marginBottom: '15px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-      {watch.image_url ? 
-        <img src={watch.image_url} alt={`${watch.brand} ${watch.model}`} style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '4px' }} /> :
-        <div style={{width: '150px', height: '150px', background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px', color: '#aaa'}}>No Image</div>
-      }
-      <div style={{ flex: 1 }}>
-        <h3>{watch.brand} {watch.model}</h3>
-        <p><strong>Ref:</strong> {watch.reference_number || 'N/A'}</p>
-        <p><strong>Price:</strong> {watch.price ? Number(watch.price).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) : 'N/A'}</p>
-        <p><strong>Condition:</strong> {watch.condition}</p>
-        
-        {}
-        <p><strong>Status:</strong> <span style={{ fontWeight: 'bold', color: getStatusColor(watch.status) }}>{watch.status}</span></p>
-      </div>
-      <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
-        <button onClick={() => onEdit(watch)} style={{ background: '#007bff', color: 'white', border: 'none', padding: '8px 12px', cursor: 'pointer', borderRadius: '4px' }}>Edit</button>
-        <button onClick={() => onDelete(watch.id)} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '8px 12px', cursor: 'pointer', borderRadius: '4px' }}>Delete</button>
-      </div>
-    </div>
+    <Card className="mb-3">
+      <Row className="g-0">
+        <Col md={4} className="d-flex align-items-center justify-content-center p-2">
+          {watch.image_url ? 
+            <Card.Img src={watch.image_url} alt={`${watch.brand} ${watch.model}`} style={{ maxHeight: '200px', width: 'auto', objectFit: 'contain' }} /> :
+            <div style={{width: '100%', height: '200px', background: '#f8f9fa', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px', color: '#6c757d'}}>No Image</div>
+          }
+        </Col>
+        <Col md={8}>
+          {}
+          <Card.Body className="d-flex justify-content-between align-items-start">
+            {}
+            <div>
+              <Card.Title as="h4">{watch.brand} {watch.model}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">Ref: {watch.reference_number || 'N/A'}</Card.Subtitle>
+              
+              <Card.Text as="div" className="mt-3">
+                <p><strong>Price:</strong> {watch.price ? Number(watch.price).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) : 'N/A'}</p>
+                <p><strong>Condition:</strong> {watch.condition}</p>
+                <p className="d-flex align-items-center">
+                  <strong>Status:</strong>
+                  <Badge bg={getStatusVariant(watch.status)} className="ms-2">{watch.status}</Badge>
+                </p>
+              </Card.Text>
+            </div>
+
+            {}
+            <div className="d-flex flex-column gap-2">
+              <Button variant="primary" onClick={() => onEdit(watch)}>Edit</Button>
+              <Button variant="outline-danger" onClick={() => onDelete(watch.id)}>Delete</Button>
+            </div>
+          </Card.Body>
+        </Col>
+      </Row>
+    </Card>
   );
 }
 
