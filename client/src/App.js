@@ -16,6 +16,9 @@ function App() {
   const [toast, setToast] = useState({ show: false, message: '', variant: 'success' });
   const [watchToDelete, setWatchToDelete] = useState(null);
   
+  // --- Pagination State ---
+  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
+
   // --- Search & Filter State ---
   const [searchTerm, setSearchTerm] = useState('');
   const [brandFilter, setBrandFilter] = useState('All Brands');
@@ -31,26 +34,17 @@ function App() {
   const [status, setStatus] = useState('Available');
   const [imageUrl, setImageUrl] = useState('');
 
-  // --- DERIVED STATE FOR FILTERING ---
+  // --- DERIVED STATE FOR FILTERING (Now operates on the current page's data) ---
   const filteredWatches = useMemo(() => {
     return watches
       .filter(watch => {
-        // Brand Filter
-        if (brandFilter !== 'All Brands' && watch.brand !== brandFilter) {
-          return false;
-        }
-        // Status Filter
-        if (statusFilter !== 'All Status' && watch.status !== statusFilter) {
-          return false;
-        }
-        // Search Term Filter
+        if (brandFilter !== 'All Brands' && watch.brand !== brandFilter) return false;
+        if (statusFilter !== 'All Status' && watch.status !== statusFilter) return false;
         if (searchTerm && !(
           watch.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
           watch.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
           watch.reference_number.toLowerCase().includes(searchTerm.toLowerCase())
-        )) {
-          return false;
-        }
+        )) return false;
         return true;
       });
   }, [watches, searchTerm, brandFilter, statusFilter]);
@@ -98,20 +92,25 @@ function App() {
   };
 
   // --- CORE FUNCTIONS ---
-  const fetchWatches = async (authToken) => {
+  const fetchWatches = useCallback(async (authToken, page = 1) => {
     try {
-      const response = await api.get('/watches', authToken);
-      if (response.ok) setWatches(await response.json());
+      // Now we send the page number in the request
+      const response = await api.get(`/watches?page=${page}`, authToken);
+      if (response.ok) {
+        const data = await response.json();
+        setWatches(data.watches); // The watches for the current page
+        setPagination(data.pagination); // The pagination info
+      }
     } catch (error) { console.error('Error fetching watches:', error); }
-  };
+  }, []); // useCallback to memoize the function
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
       setToken(savedToken);
-      fetchWatches(savedToken);
+      fetchWatches(savedToken, pagination.currentPage);
     }
-  }, []);
+  }, [fetchWatches, pagination.currentPage]); // Re-fetch when currentPage changes
 
   const handleLogin = async (email, password) => {
     try {
@@ -120,7 +119,7 @@ function App() {
       if (data.token) {
         localStorage.setItem('token', data.token);
         setToken(data.token);
-        fetchWatches(data.token);
+        fetchWatches(data.token, 1); // Fetch the first page on login
       } else { alert(data.message || 'Login failed'); }
     } catch (error) { alert('Login error. Please try again.'); }
   };
@@ -157,7 +156,7 @@ function App() {
         : await api.post('/watches', watchData, token);
 
       if (response.ok) {
-        fetchWatches(token);
+        fetchWatches(token, pagination.currentPage); // Re-fetch the current page
         handleCancelEdit();
         showToast(`'${watchData.brand} ${watchData.model}' ${editingWatchId ? 'updated' : 'added'} successfully!`);
       } else { showToast(`Failed to ${editingWatchId ? 'update' : 'add'} watch.`, 'danger'); }
@@ -173,7 +172,7 @@ function App() {
     try {
       const response = await api.delete(`/watches/${watchToDelete.id}`, token);
       if (response.ok) {
-        fetchWatches(token);
+        fetchWatches(token, pagination.currentPage); // Re-fetch the current page
         showToast(`'${watchToDelete.brand} ${watchToDelete.model}' was deleted.`, 'success');
       }
       else { showToast('Failed to delete watch.', 'danger'); }
@@ -203,7 +202,7 @@ function App() {
       <div style={mainContentStyle}>
         <Dashboard 
           watches={filteredWatches}
-          allWatches={watches} // Pass the original unfiltered list for filter options
+          allWatches={watches}
           handleDeleteWatch={requestDeleteWatch}
           handleFormSubmit={handleFormSubmit}
           editingWatchId={editingWatchId}
@@ -224,11 +223,13 @@ function App() {
           isFormValid={isFormValid}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          // Pass filter state down
           brandFilter={brandFilter}
           setBrandFilter={setBrandFilter}
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
+          // Pass pagination state and handler
+          pagination={pagination}
+          onPageChange={(page) => setPagination(prev => ({ ...prev, currentPage: page }))}
         />
       </div>
       <NotificationToast 

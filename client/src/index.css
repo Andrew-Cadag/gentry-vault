@@ -46,20 +46,20 @@ h1, h2, h3, h4, h5, h6, .card-title {
   background-color: var(--surface-dark) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--primary-text) !important;
-  padding: 0.75rem 1rem; /* Increase padding for a more premium feel */
+  padding: 0.75rem 1rem;
 }
 
 .form-control:focus, .form-select:focus {
   border-color: var(--accent-yellow) !important;
   box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25) !important;
-  background-color: var(--surface-dark) !important; /* Ensure focus background stays dark */
+  background-color: var(--surface-dark) !important;
 }
 
 /* Style for Buttons */
 .btn-primary {
   background-color: var(--accent-yellow) !important;
   border-color: var(--accent-yellow) !important;
-  color: #000000 !important; /* Black text for yellow button */
+  color: #000000 !important;
   font-weight: bold !important;
 }
 
@@ -67,7 +67,6 @@ h1, h2, h3, h4, h5, h6, .card-title {
   filter: brightness(0.9);
 }
 
-/* NEW: Style for the secondary "Cancel" button */
 .btn-secondary {
     background-color: #FFFFFF !important;
     border-color: #FFFFFF !important;
@@ -92,7 +91,7 @@ h1, h2, h3, h4, h5, h6, .card-title {
   --bs-table-hover-color: var(--primary-text) !important;
 }
 
-/* --- NEW: Modal Style Overrides --- */
+/* --- Modal Style Overrides --- */
 .modal-content {
   background-color: var(--surface-dark) !important;
   border: 1px solid var(--border-color) !important;
@@ -105,6 +104,29 @@ h1, h2, h3, h4, h5, h6, .card-title {
 
 .btn-close {
   filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* --- NEW: Pagination Style Overrides --- */
+.page-link {
+  background-color: var(--surface-dark) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--secondary-text) !important;
+}
+
+.page-link:hover {
+  background-color: var(--hover-color) !important;
+}
+
+.page-item.active .page-link {
+  background-color: var(--accent-yellow) !important;
+  border-color: var(--accent-yellow) !important;
+  color: #000000 !important;
+}
+
+.page-item.disabled .page-link {
+  background-color: var(--surface-dark) !important;
+  border-color: var(--border-color) !important;
+  color: #6c757d !important; /* A muted color for disabled state */
 }
 
 

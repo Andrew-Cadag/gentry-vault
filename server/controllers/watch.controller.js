@@ -1,18 +1,41 @@
 import pool from '../config/database.js';
 
-// Updated to select the new 'quantity' column
+// Updated to handle pagination
 export const getAllWatches = async (req, res) => {
   try {
-    const sql = "SELECT `id`, `brand`, `model`, `reference_number`, `quantity`, `price`, `condition`, `status`, `image_url` FROM `watches` WHERE `user_id` = ?";
-    const [watches] = await pool.query(sql, [req.userData.userId]);
-    res.json(watches);
+    // Get page and limit from query params, with default values
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+    const offset = (page - 1) * limit;
+
+    // First, get the total count of all watches for this user
+    const countSql = "SELECT COUNT(*) as total FROM `watches` WHERE `user_id` = ?";
+    const [countRows] = await pool.query(countSql, [req.userData.userId]);
+    const totalWatches = countRows[0].total;
+    const totalPages = Math.ceil(totalWatches / limit);
+
+    // Then, get the paginated data
+    const dataSql = "SELECT `id`, `brand`, `model`, `reference_number`, `quantity`, `price`, `condition`, `status`, `image_url` FROM `watches` WHERE `user_id` = ? LIMIT ? OFFSET ?";
+    const [watches] = await pool.query(dataSql, [req.userData.userId, limit, offset]);
+
+    // Send back both the data for the current page and the pagination info
+    res.json({
+      watches,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalWatches
+      }
+    });
+
   } catch (error) {
     console.error("Error in getAllWatches:", error); 
     res.status(500).send({ message: 'Error fetching watches', error });
   }
 };
 
-// Updated to insert the new 'quantity' field
+// --- NO CHANGES TO THE FUNCTIONS BELOW ---
+
 export const createWatch = async (req, res) => {
   const { brand, model, reference_number, quantity, price, condition, status, image_url } = req.body;
   const sql = "INSERT INTO `watches` (`user_id`, `brand`, `model`, `reference_number`, `quantity`, `price`, `condition`, `status`, `image_url`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -27,7 +50,6 @@ export const createWatch = async (req, res) => {
   }
 };
 
-// Updated to update the new 'quantity' field
 export const updateWatch = async (req, res) => {
   const { id } = req.params;
   const { brand, model, reference_number, quantity, price, condition, status, image_url } = req.body;
@@ -49,9 +71,8 @@ export const updateWatch = async (req, res) => {
     console.error("Error in updateWatch:", error);
     res.status(500).send({ message: 'Error updating watch', error });
   }
-};
+}; 
 
-// This function does not need to be changed
 export const deleteWatch = async (req, res) => {
   const { id } = req.params;
   try {
