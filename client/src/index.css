@@ -1,18 +1,112 @@
+/* Define the color palette using CSS variables for easy reuse */
+:root {
+  --background-dark: #121212;
+  --surface-dark: #1E1E1E;
+  --primary-text: #FFFFFF;
+  --secondary-text: #A8A8A8;
+  --accent-yellow: #FFD700;
+  --border-color: #333333;
+  --hover-color: #2A2A2A; /* A slightly lighter gray for hover effects */
+}
+
 body {
   margin: 0;
-  
   font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
+  
+  /* Apply the dark theme colors */
+  background-color: var(--background-dark);
+  color: var(--primary-text);
 }
 
-
+/* Use the elegant 'Playfair Display' for all headings */
 h1, h2, h3, h4, h5, h6, .card-title {
   font-family: 'Playfair Display', serif;
 }
+
+/* --- Overrides for React Bootstrap Components --- */
+
+/* Style for Cards */
+.card {
+  background-color: var(--surface-dark) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--primary-text) !important;
+}
+
+/* Style for Form Inputs and Labels */
+.form-label {
+  color: var(--secondary-text) !important;
+  font-size: 0.9rem;
+}
+
+.form-control, .form-select {
+  background-color: var(--surface-dark) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--primary-text) !important;
+  padding: 0.75rem 1rem; /* Increase padding for a more premium feel */
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent-yellow) !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25) !important;
+  background-color: var(--surface-dark) !important; /* Ensure focus background stays dark */
+}
+
+/* Style for Buttons */
+.btn-primary {
+  background-color: var(--accent-yellow) !important;
+  border-color: var(--accent-yellow) !important;
+  color: #000000 !important; /* Black text for yellow button */
+  font-weight: bold !important;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.9);
+}
+
+/* NEW: Style for the secondary "Cancel" button */
+.btn-secondary {
+    background-color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
+.btn-secondary:hover {
+    filter: brightness(0.9);
+}
+
+
+/* --- Table Style Overrides --- */
+.table-dark {
+  --bs-table-bg: var(--surface-dark) !important;
+  --bs-table-border-color: var(--border-color) !important;
+  --bs-table-color: var(--primary-text) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-hover-bg: var(--hover-color) !important;
+  --bs-table-hover-color: var(--primary-text) !important;
+}
+
+/* --- NEW: Modal Style Overrides --- */
+.modal-content {
+  background-color: var(--surface-dark) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--primary-text) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
