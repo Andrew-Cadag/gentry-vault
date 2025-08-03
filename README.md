@@ -1,7 +1,7 @@
 The Gentry Vault
 This project I built to create a full-stack inventory management system for a luxury watch business, Gentry Timepiece. This application is utilized for managing a detailed inventory of high-value timepieces.
 
-Features
+--- Features ---
 Secure Authentication: Full user registration and login system using JSON Web Tokens (JWT) for secure, session-based access.
 
 Complete Inventory Management (CRUD): Full Create, Read, Update, and Delete functionality for the watch inventory.
@@ -22,16 +22,17 @@ Image URL with a fallback for missing images
 
 Component-Based Frontend: The user interface is built with React and has been fully refactored into clean, reusable components for maintainability and scalability.
 
-Tech Stack
-Frontend: React.js
+--- What I Used to Build It ---
+
+Frontend: React.js, React Bootstrap
 
 Backend: Node.js, Express.js
 
-Database: MySQL (managed with XAMPP)
+Database: MySQL (with XAMPP)
 
-Authentication: JSON Web Tokens (JWT), bcryptjs for password hashing
+Authentication: JSON Web Tokens (JWT) & bcryptjs for password security
 
-Running the Project Locally
+--- Running the Project Locally ---
 To get a local copy up and running, follow these simple steps.
 
 Prerequisites
@@ -79,7 +80,14 @@ You will need to register your first user account by sending a POST request to t
 
 You can then log in with those credentials on the web interface.
 
-My Project Journey
+--- My Project Journey ---
 This project was a fantastic learning experience. I started by designing a professional file structure and building out the backend API, ensuring all endpoints were secure and efficient. I then developed the React frontend, focusing on core functionality.
 
 The most rewarding part was refactoring the entire frontend from a single App.js file into a clean, component-based architecture. This process made the code much easier to manage and was instrumental in adding the "Edit" feature smoothly. Debugging issues like SQL keyword conflicts and silent frontend failures taught me invaluable lessons about the full-stack development process.
+
+
+--- Latest Update! (August 1, 2025) ---
+
+Just finished a big UI/UX overhaul using React Bootstrap. I swapped out all the basic HTML for professional components like Cards, Forms, and Badges.
+
+Also updated the fonts to a more luxury-inspired style (Playfair Display & Lato) to better match the business's brand
